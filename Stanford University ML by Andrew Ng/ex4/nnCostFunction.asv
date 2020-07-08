@@ -69,7 +69,7 @@ a2 =[ones(1,size(a2,2));a2];%adding a ones to the a2 matrix(adding x0)
 a3 = sigmoid(Theta2*a2);%all outputs for each input(columwise)
 %h = a3; %the activations of the last layer for all inputs
 
-j1 = 0; %initial none averaged cost
+j1 = 0; %none averaged cost
 for i = 1:m
    %creating the expected nn output (expY)
    expY = zeros(num_labels,1);
@@ -82,7 +82,9 @@ for i = 1:m
    %resetting expY
    expY = zeros(num_labels,1);
 end
-J = j1/m; %the final averaged J
+
+J = j1/m; 
+J = (1/m)*(sum(sum(-(y'*log(h))-(1-y)'*log(1-h)))); %J is for the entire dataset and gives one value
 
 
 
