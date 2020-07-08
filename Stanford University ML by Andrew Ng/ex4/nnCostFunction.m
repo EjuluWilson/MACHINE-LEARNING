@@ -69,7 +69,7 @@ a2 =[ones(1,size(a2,2));a2];%adding a ones to the a2 matrix(adding x0)
 a3 = sigmoid(Theta2*a2);%all outputs for each input(columwise)
 %h = a3; %the activations of the last layer for all inputs
 
-j1 = 0; %initial none averaged cost
+j1 = 0; %initial total none averaged cost
 for i = 1:m
    %creating the expected nn output (expY)
    expY = zeros(num_labels,1);
@@ -78,6 +78,7 @@ for i = 1:m
    h = a3(:,i);
    %cost for each input
    j2 = (-(expY'*log(h))-(1-expY)'*log(1-h));
+   %accumulating the none averaged cost
    j1 = j1 + j2;
    %resetting expY
    expY = zeros(num_labels,1);
