@@ -83,7 +83,8 @@ for i = 1:m
    %resetting expY
    expY = zeros(num_labels,1);
 end
-J = j1/m; %the final averaged J
+J = j1/m; %the final averaged J (unregularized)
+J = J + (lambda/(2*m))*(sum(nn_params.^2)); %regularized
 
 
 
