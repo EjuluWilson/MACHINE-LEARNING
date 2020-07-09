@@ -1,8 +1,9 @@
-function [J grad] = nnCostFunction(nn_params, ...
+function [J ,grad] = nnCostFunction(nn_params, ...
                                    input_layer_size, ...
                                    hidden_layer_size, ...
                                    num_labels, ...
                                    X, y, lambda)
+                               
 %NNCOSTFUNCTION Implements the neural network cost function for a two layer
 %neural network which performs classification
 %   [J grad] = NNCOSTFUNCTON(nn_params, hidden_layer_size, num_labels, ...
@@ -27,8 +28,8 @@ m = size(X, 1);
          
 % You need to return the following variables correctly 
 %J = 0;
-Theta1_grad = zeros(size(Theta1));
-Theta2_grad = zeros(size(Theta2));
+% Theta1_grad = zeros(size(Theta1));
+% Theta2_grad = zeros(size(Theta2));
 
 % ====================== YOUR CODE HERE ======================
 % Instructions: You should complete the code by working through the
@@ -62,12 +63,19 @@ Theta2_grad = zeros(size(Theta2));
 %               and Theta2_grad from Part 2.
 %
 
+Theta1_grad = zeros(size(Theta1));
+Theta2_grad = zeros(size(Theta2));
 
+
+%Forward propagation for all data
 X = [ones(m,1),X];
-a2 = sigmoid(Theta1*X');% layer two activations for each input matrix for all samples(
+z2 = Theta1*X'; %z of layer 2
+a2 = sigmoid(z2);% layer two activations for each input matrix for all samples
 a2 =[ones(1,size(a2,2));a2];%adding a ones to the a2 matrix(adding x0)
-a3 = sigmoid(Theta2*a2);%all outputs for each input(columwise)
+z3 = Theta2*a2;%z of layer 3
+a3 = sigmoid(z3);%all outputs for each input(columwise)
 %h = a3; %the activations of the last layer for all inputs
+
 
 j1 = 0; %initial total none averaged cost
 for i = 1:m
@@ -80,6 +88,25 @@ for i = 1:m
    j2 = (-(expY'*log(h))-(1-expY)'*log(1-h));
    %accumulating the none averaged cost
    j1 = j1 + j2;
+   
+   %#################try grad here############
+   %error for each input in the ouput layer
+   l3_error = h-expY;
+   %Theta for backprop
+   backpropTheta2 = Theta2(:,2:end);%eliminates the weight due to the bais
+
+   l2_error = (backpropTheta2'*l3_error).*sigmoidGradient(z2(:,i));
+   
+   %updating the theta(involes bais term as well)
+   Theta2_sub_grad = l3_error*a2(:,i)';
+   Theta1_sub_grad = l2_error*X(i,:);
+  
+   %accumulating the grad
+   Theta1_grad = Theta1_grad + Theta1_sub_grad; %for updating Theat1
+   Theta2_grad = Theta2_grad + Theta2_sub_grad; %for updating Theat2
+   
+   
+   %######################
    %resetting expY
    expY = zeros(num_labels,1);
 end
@@ -88,23 +115,17 @@ J = j1/m; %the final averaged J (unregularized)
 regTheta1 = Theta1(:,2:end);
 regTheta2 = Theta2(:,2:end);
 regTheta = [regTheta1(:);regTheta2(:)];%all thetas with no bias weights
-
 J = J + (lambda/(2*m))*(sum(regTheta.^2)); %regularized
 
+%##################### the grad ############
+% Theta1_grad = (1/m)*Theta1_grad;
+% Theta1_grad(:,2:end)= (lambda/m)+Theta1(:,2:end);
+% 
+% Theta2_grad = (1/m)*Theta2_grad;
+% Theta2_grad(:,2:end)= (lambda/m)+Theta2(:,2:end);
 
-
-
-
-
-
-
-
-% -------------------------------------------------------------
-
-% =========================================================================
 
 % Unroll gradients
-grad = [Theta1_grad(:) ; Theta2_grad(:)];
-
+grad = (1/m)*[Theta1_grad(:) ; Theta2_grad(:)];
 
 end
