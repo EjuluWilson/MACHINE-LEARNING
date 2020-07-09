@@ -84,7 +84,12 @@ for i = 1:m
    expY = zeros(num_labels,1);
 end
 J = j1/m; %the final averaged J (unregularized)
-J = J + (lambda/(2*m))*(sum(nn_params.^2)); %regularized
+%excluding the bias weights 
+regTheta1 = Theta1(:,2:end);
+regTheta2 = Theta2(:,2:end);
+regTheta = [regTheta1(:);regTheta2(:)];%all thetas with no bias weights
+
+J = J + (lambda/(2*m))*(sum(regTheta.^2)); %regularized
 
 
 
