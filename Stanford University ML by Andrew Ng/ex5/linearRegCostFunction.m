@@ -19,7 +19,7 @@ grad = zeros(size(theta));
 %               You should set J to the cost and grad to the gradient.
 %
 %regularised linaer regression cost function
-J = (1/(2*m))*(sum((X*theta - y).^2) +(sum(theta)-theta(1)));
+J = (1/(2*m))*(sum((X*theta - y).^2) + lambda*(sum(theta)-theta(1)));
 
 
 %g =(X'*(X*theta- y));
