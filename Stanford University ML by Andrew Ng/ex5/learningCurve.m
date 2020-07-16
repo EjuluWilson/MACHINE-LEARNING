@@ -53,14 +53,19 @@ error_val   = zeros(m, 1);
 
 % ---------------------- Sample Solution ----------------------
 
-
-
-
-
-
-
+for i = 1:m
+    %training LR
+    [theta] = trainLinearReg(X(1:i,:), y(1:i), lambda);
+    
+    %generating the training_set error vector
+    train_set_predicted = X(1:i,:)*theta;
+    train_set_existing = y(1:i);
+    error_train(i) = (1/(2*m))*sum((train_set_predicted-train_set_existing).^2);
+    
+    %generating the evaluation_set error vecttor
+    error_val(i) = (1/(2*m))*sum(((Xval*theta)-yval).^2);
+    
+end
 % -------------------------------------------------------------
-
-% =========================================================================
-
+% =======================================================================
 end

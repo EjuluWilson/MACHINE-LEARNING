@@ -39,15 +39,19 @@ error_val = zeros(length(lambda_vec), 1);
 %
 %
 
-
-
-
-
-
-
-
-
-
+m1 = size(y,1);
+m2 = size(yval,1);
+for i = 1:length(lambda_vec)
+    %training LR
+    [theta] = trainLinearReg(X,y, lambda_vec(i));
+    
+    %generating the training_set error vector
+    error_train(i) = (1/(2*m1))*sum((X*theta-y).^2);
+    
+    %generating the evaluation_set error vecttor
+    error_val(i) = (1/(2*m2))*sum(((Xval*theta)-yval).^2);
+    
+end
 % =========================================================================
 
 end
